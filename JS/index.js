@@ -1,22 +1,7 @@
-// 產品列表 V
-// 單一產品細節 X
-// 加入購物車 V
-// 購物車列表 V
-// 刪除購物車項目（單一、全部） V
-// 調整購物車產品數量 V
-// 結帳付款 X
 
-// 注意：
-// 新增相同產品到購物車時需累加項目 V
-// 送出訂單後，購物車需要清除原本項目 X
-// 購物車無產品時不建議發出結帳請求 X
-// 前台頁面表單驗證（必要完成），驗證內容包含： X
+const url = 'https://vue3-course-api.hexschool.io';
+const path = 'fred8196';
 
-// 姓名：必填
-// Email：必填 / 需要符合格式 / input type 為 email
-// 電話：必填 / 超過 8 碼 / input type 為 tel
-// 地址：必填
-// 留言：非必填
 Object.keys(VeeValidateRules).forEach(rule => {
     if (rule !== 'default') {
         VeeValidate.defineRule(rule, VeeValidateRules[rule]);
@@ -35,14 +20,14 @@ import productModal from "./productModal.js";
 const app = Vue.createApp({
     data() {
         return {
-            url: 'https://vue3-course-api.hexschool.io',
-            path: 'fred8196',
             productData: [],
             pagination: {},
             loadingStatus: {
                 loadingItemId: '',
             },
-            cart: {},
+            cart: {
+                carts: []
+            },
             tempProduct: {},
             form: {
                 user: {
@@ -61,7 +46,7 @@ const app = Vue.createApp({
     },
     methods: {
         getProductData() {
-            axios.get(`${this.url}/api/${this.path}/products/all`)
+            axios.get(`${url}/api/${path}/products/all`)
                 .then(res => {
                     if (res.data.success) {
                         const { products, pagination } = res.data;
@@ -76,7 +61,7 @@ const app = Vue.createApp({
         },
         addToCart(itemId, itemTitle, qty = 1) {
             this.loadingStatus.loadingItemId = itemId;
-            axios.post(`${this.url}/api/${this.path}/cart`, {
+            axios.post(`${url}/api/${path}/cart`, {
                 "data": {
                     "product_id": itemId,
                     "qty": qty
@@ -97,7 +82,7 @@ const app = Vue.createApp({
                 })
         },
         getCartList() {
-            axios.get(`${this.url}/api/${this.path}/cart`)
+            axios.get(`${url}/api/${path}/cart`)
                 .then(res => {
                     if (res.data.success) {
                         console.log(res);
@@ -111,7 +96,7 @@ const app = Vue.createApp({
                 })
         },
         deleteAllCarts() {
-            axios.delete(`${this.url}/api/${this.path}/carts`)
+            axios.delete(`${url}/api/${path}/carts`)
                 .then(res => {
                     if (res.data.success) {
                         alert(`${res.data.message}所有購物車品項`)
@@ -126,7 +111,7 @@ const app = Vue.createApp({
         },
         removeCartItem(itemId, itemTitle) {
             this.loadingStatus.loadingItemId = itemId;
-            axios.delete(`${this.url}/api/${this.path}/cart/${itemId}`)
+            axios.delete(`${url}/api/${path}/cart/${itemId}`)
                 .then(res => {
                     if (res.data.success) {
                         alert(itemTitle + res.data.message)
@@ -142,7 +127,7 @@ const app = Vue.createApp({
         },
         updateCart(item) {
             this.loadingStatus.loadingItemId = item.id;
-            axios.put(`${this.url}/api/${this.path}/cart/${item.id}`, {
+            axios.put(`${url}/api/${path}/cart/${item.id}`, {
                 "data": {
                     "product_id": `${item.product.id}`,
                     "qty": item.qty
@@ -163,7 +148,7 @@ const app = Vue.createApp({
         },
         getModalProduct(itemId) {
             this.loadingStatus.loadingItemId = itemId;
-            axios.get(`${this.url}/api/${this.path}/product/${itemId}`)
+            axios.get(`${url}/api/${path}/product/${itemId}`)
                 .then(res => {
                     if (res.data.success) {
                         this.tempProduct = res.data.product;
@@ -186,7 +171,7 @@ const app = Vue.createApp({
                 alert('購物車內無品項');
                 return;
             }
-            axios.post(`${this.url}/api/${this.path}/order`, { "data": this.form })
+            axios.post(`${url}/api/${path}/order`, { "data": this.form })
                 .then(res => {
                     if (res.data.success) {
                         alert(res.data.message);

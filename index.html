@@ -66,7 +66,8 @@
                 </table>
                 <!-- 購物車列表 -->
                 <div class="text-end">
-                    <button class="btn btn-outline-danger" type="button" @click="deleteAllCarts">清空購物車</button>
+                    <button class="btn btn-outline-danger" type="button" @click="deleteAllCarts"
+                        :class="{'disabled':cart.carts.length===0}">清空購物車</button>
                 </div>
                 <table class="table align-middle">
                     <thead>
@@ -108,7 +109,7 @@
                                 </td>
                             </tr>
                         </template>
-                        <template v-if="!cart.carts">
+                        <template v-else="cart.carts.length===0">
                             <tr>
                                 <td>
                                     <div>
