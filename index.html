@@ -79,7 +79,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-if="cart.carts">
+                        <template v-if="cart.carts.length>0">
                             <tr v-for="item in cart.carts" :key="item.id">
                                 <td>
                                     <button type="button" class="btn btn-outline-danger btn-sm"
@@ -109,12 +109,10 @@
                                 </td>
                             </tr>
                         </template>
-                        <template v-else="cart.carts.length===0">
+                        <template v-else>
                             <tr>
-                                <td>
-                                    <div>
-                                        購物車內無品項
-                                    </div>
+                                <td colspan="4" class="text-center">
+                                    購物車內無品項
                                 </td>
                             </tr>
                         </template>
