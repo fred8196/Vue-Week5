@@ -8,7 +8,7 @@ Object.keys(VeeValidateRules).forEach(rule => {
     }
 });
 
-VeeValidateI18n.loadLocaleFromURL('../zh_TW.json');
+VeeValidateI18n.loadLocaleFromURL('./zh_TW.json');
 // Activate the locale
 VeeValidate.configure({
     generateMessage: VeeValidateI18n.localize('zh_TW'),
@@ -38,7 +38,7 @@ const app = Vue.createApp({
                 },
                 message: ''
             },
-            isLoading: true
+            isLoading: false
         }
     },
     components: {
@@ -46,12 +46,14 @@ const app = Vue.createApp({
     },
     methods: {
         getProductData() {
+            this.isLoading=true
             axios.get(`${url}/api/${path}/products/all`)
                 .then(res => {
                     if (res.data.success) {
                         const { products, pagination } = res.data;
                         this.productData = products;
                         this.pagination = pagination;
+                        this.isLoading=false
                         console.log(this.productData, this.pagination);
                     }
                 })
@@ -60,6 +62,7 @@ const app = Vue.createApp({
                 })
         },
         addToCart(itemId, itemTitle, qty = 1) {
+            this.isLoading=true
             this.loadingStatus.loadingItemId = itemId;
             axios.post(`${url}/api/${path}/cart`, {
                 "data": {
@@ -70,10 +73,11 @@ const app = Vue.createApp({
                 .then(res => {
                     if (res.data.success) {
                         console.log(res);
-                        alert(itemTitle + res.data.message)
                         this.$refs.productModal.hideModal();
                         this.getCartList();
                         this.loadingStatus.loadingItemId = '';
+                        this.isLoading=false
+                        alert(itemTitle + res.data.message)
                     } else {
                         alert(res.data.message)
                     }
@@ -82,6 +86,7 @@ const app = Vue.createApp({
                 })
         },
         getCartList() {
+            this.isLoading=true
             axios.get(`${url}/api/${path}/cart`)
                 .then(res => {
                     if (res.data.success) {
@@ -111,12 +116,14 @@ const app = Vue.createApp({
         },
         removeCartItem(itemId, itemTitle) {
             this.loadingStatus.loadingItemId = itemId;
+            this.isLoading=true
             axios.delete(`${url}/api/${path}/cart/${itemId}`)
                 .then(res => {
                     if (res.data.success) {
-                        alert(itemTitle + res.data.message)
                         this.getCartList();
                         this.loadingStatus.loadingItemId = '';
+                        this.isLoading=false
+                        alert(itemTitle + res.data.message)
                     } else {
                         alert(res.data.message)
                     }
@@ -127,6 +134,7 @@ const app = Vue.createApp({
         },
         updateCart(item) {
             this.loadingStatus.loadingItemId = item.id;
+            this.isLoading=true
             axios.put(`${url}/api/${path}/cart/${item.id}`, {
                 "data": {
                     "product_id": `${item.product.id}`,
@@ -135,9 +143,11 @@ const app = Vue.createApp({
             })
                 .then(res => {
                     if (res.data.success) {
-                        alert(res.data.message)
+                        this.isLoading=true
                         this.getCartList();
                         this.loadingStatus.loadingItemId = '';
+                        this.isLoading=false
+                        alert(res.data.message)
                     } else {
                         alert(res.data.message)
                     }
@@ -171,12 +181,14 @@ const app = Vue.createApp({
                 alert('購物車內無品項');
                 return;
             }
+            this.isLoading=true
             axios.post(`${url}/api/${path}/order`, { "data": this.form })
                 .then(res => {
                     if (res.data.success) {
-                        alert(res.data.message);
                         this.getCartList();
                         this.$refs.form.resetForm();
+                        this.isLoading=false
+                        alert(res.data.message);
                     } else {
                         alert(res.data.message);
                     }

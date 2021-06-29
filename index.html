@@ -196,7 +196,7 @@
               ></error-message>
             </div>
             <div class="mb-3">
-              <label for="name" class="form-lable">Email</label>
+              <label for="email" class="form-lable">Email</label>
               <v-field
                 id="email"
                 name="email"
@@ -213,11 +213,11 @@
               ></error-message>
             </div>
             <div class="mb-3">
-              <label for="name" class="form-lable">電話</label>
+              <label for="tel" class="form-lable">電話</label>
               <v-field
                 id="tel"
                 name="電話"
-                type="text"
+                type="tel"
                 class="form-control"
                 :class="{ 'is-invalid': errors['電話'] }"
                 placeholder="請輸入 電話"
@@ -230,7 +230,7 @@
               ></error-message>
             </div>
             <div class="mb-3">
-              <label for="name" class="form-lable">地址</label>
+              <label for="address" class="form-lable">地址</label>
               <v-field
                 id="address"
                 name="地址"
@@ -258,7 +258,7 @@
               ></textarea>
             </div>
             <div class="text-end">
-              <button type="submit" class="btn btn-outline-primary">
+              <button type="submit" class="btn btn-outline-primary" :disabled="cart.carts.length===0">
                 送出訂單
               </button>
             </div>
